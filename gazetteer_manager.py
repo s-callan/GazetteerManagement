@@ -1,9 +1,30 @@
 import csv
 import datetime
+import json
 import os
 import sqlite3
 
 from definitions import gazetteerDef
+
+
+class Config(object):
+    def __init__(self):
+        self.data = []
+
+    def load(self, fn):
+        if os.path.exists(fn):
+            self.data = json.load(open(fn, "rt"))
+        else:
+            self.data = []
+
+    def save(self, fn):
+        json.dump(self.data, open(fn, "wt"))
+
+    def get(self, key):
+        return self.data[key]
+
+    def set(self, key, value):
+        self.data[key] = value
 
 
 class DatabaseManager(object):
@@ -153,8 +174,14 @@ U  - Update gazetteer
 
 
 class Commands(object):
-    def run(self):
+    def __init__(self):
+        self.config = Config()
+        self.config.load("config.json")
 
+    def save(self):
+        self.config.save("config.json")
+
+    def run(self):
         while True:
             print OPTIONS
             cmd = raw_input("select option : ").upper()
@@ -163,5 +190,7 @@ class Commands(object):
 
 
 if __name__ == "__main__":
-    Commands().run()
+    cmd = Commands()
+    cmd.run()
+    cmd.save()
     # load_data()
