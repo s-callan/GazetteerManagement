@@ -9,13 +9,13 @@ from definitions import gazetteerDef
 
 class Config(object):
     def __init__(self):
-        self.data = []
+        self.data = {}
+        self.data["staging"] = []
+        self.data["gazetteers"] = []
 
     def load(self, fn):
         if os.path.exists(fn):
             self.data = json.load(open(fn, "rt"))
-        else:
-            self.data = []
 
     def save(self, fn):
         json.dump(self.data, open(fn, "wt"))
@@ -189,8 +189,12 @@ class Commands(object):
                 break
 
 
-if __name__ == "__main__":
+def main():
     cmd = Commands()
     cmd.run()
     cmd.save()
     # load_data()
+
+
+if __name__ == "__main__":
+    main()
